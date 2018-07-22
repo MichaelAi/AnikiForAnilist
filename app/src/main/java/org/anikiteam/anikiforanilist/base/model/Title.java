@@ -1,8 +1,11 @@
 package org.anikiteam.anikiforanilist.base.model;
 
+import android.support.annotation.CallSuper;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -11,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Title extends BaseModel {
 
     String romaji;

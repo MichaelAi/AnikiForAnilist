@@ -12,6 +12,7 @@ public class GetMediaByTypeAndIdQuery extends GraphQLQuery{
         parseFile(context,"QueryMediaByTypeFileAndId");
         setArgument("type",type);
         setArgument("id",id);
+
     }
 
 }

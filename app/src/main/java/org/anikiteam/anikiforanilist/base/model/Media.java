@@ -1,6 +1,7 @@
 package org.anikiteam.anikiforanilist.base.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Media extends BaseModel{
 
     Title title;

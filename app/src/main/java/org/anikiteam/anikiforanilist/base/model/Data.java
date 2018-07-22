@@ -1,5 +1,6 @@
 package org.anikiteam.anikiforanilist.base.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**

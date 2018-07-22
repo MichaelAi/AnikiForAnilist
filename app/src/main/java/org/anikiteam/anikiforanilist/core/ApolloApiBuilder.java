@@ -1,18 +1,24 @@
 package org.anikiteam.anikiforanilist.core;
 
+import com.apollographql.apollo.ApolloClient;
+import com.apollographql.apollo.api.Operation;
+import com.apollographql.apollo.api.ResponseField;
+import com.apollographql.apollo.cache.normalized.CacheKey;
+import com.apollographql.apollo.cache.normalized.CacheKeyResolver;
+import com.apollographql.apollo.cache.normalized.NormalizedCacheFactory;
+import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy;
+import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory;
+import com.apollographql.apollo.subscription.WebSocketSubscriptionTransport;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.InvalidParameterException;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ConnectionSpec;
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.TlsVersion;
@@ -24,58 +30,75 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SNAKE_CASE;
 
 /**
- * Created by Mike Ai on 18-Jul-18.
+ * Created by Mike Ai on 21-Jul-18.
  */
 
-/**
- * Builds a retrofit api object to execute network calls on
- */
-public class RetrofitApiBuilder {
+public class ApolloApiBuilder {
 
-    private  Retrofit retrofit;
     private long timeout;
     private boolean forceSSL;
     private String baseUrl;
     private String language;
     private boolean enableLogging;
 
-    public RetrofitApiBuilder setTimeout(int timeout){
+
+    public ApolloApiBuilder setTimeout(int timeout){
         this.timeout = timeout;
         return this;
     }
 
-    public RetrofitApiBuilder forceSSL(boolean forceSSL){
+    public ApolloApiBuilder forceSSL(boolean forceSSL){
         this.forceSSL = forceSSL;
         return this;
     }
 
-    public RetrofitApiBuilder setBaseUrl(String baseUrl){
+    public ApolloApiBuilder setBaseUrl(String baseUrl){
         this.baseUrl = baseUrl;
         return this;
     }
 
-    public RetrofitApiBuilder setLanguage(String language){
+    public ApolloApiBuilder setLanguage(String language){
         this.language = language;
         return this;
     }
 
-    public RetrofitApiBuilder enableLogging(boolean enableLogging){
+    public ApolloApiBuilder enableLogging(boolean enableLogging){
         this.enableLogging = enableLogging;
         return this;
     }
 
-    public <T> T build(Class<T> clazz) {
-        retrofit = retrofit(okHttpClient(), httpUrl(baseUrl));
-        return retrofit.create(clazz);
+    public ApolloClient build() {
+        return ApolloClient.builder()
+                .serverUrl(baseUrl)
+                .okHttpClient(okHttpClient())
+                .normalizedCache(normalizedCacheFactory(), cacheKeyResolver())
+                .build();
     }
 
-    private HttpUrl httpUrl(String stringUrl) {
-        try {
-            URL url = new URL(stringUrl);
-            return HttpUrl.get(url);
-        } catch (MalformedURLException e) {
-            throw new InvalidParameterException();
-        }
+    private CacheKeyResolver cacheKeyResolver(){
+        return new CacheKeyResolver() {
+            @NotNull
+            @Override
+            public CacheKey fromFieldRecordSet(@NotNull ResponseField field, @NotNull Map<String, Object> recordSet) {
+                String typeName = (String) recordSet.get("__typename");
+                if ("User".equals(typeName)) {
+                    String userKey = typeName + "." + recordSet.get("login");
+                    return CacheKey.from(userKey);
+                }
+                if (recordSet.containsKey("id")) {
+                    String typeNameAndIDKey = recordSet.get("__typename") + "." + recordSet.get("id");
+                    return CacheKey.from(typeNameAndIDKey);
+                }
+                return CacheKey.NO_KEY;
+            }
+
+            // Use this resolver to customize the key for fields with variables: eg entry(repoFullName: $repoFullName).
+            // This is useful if you want to make query to be able to resolved, even if it has never been run before.
+            @NotNull @Override
+            public CacheKey fromFieldArguments(@NotNull ResponseField field, @NotNull Operation.Variables variables) {
+                return CacheKey.NO_KEY;
+            }
+        };
     }
 
     private OkHttpClient.Builder okHttpClientBuilder() {
@@ -108,12 +131,8 @@ public class RetrofitApiBuilder {
                 .build();
     }
 
-    private Retrofit retrofit(OkHttpClient okHttpClient, HttpUrl baseUrl) {
-        return new Retrofit.Builder()
-                .addConverterFactory(jacksonConverterFactory())
-                .client(okHttpClient)
-                .baseUrl(baseUrl)
-                .build();
+    private NormalizedCacheFactory normalizedCacheFactory() {
+        return new LruNormalizedCacheFactory(EvictionPolicy.NO_EVICTION);
     }
 
     private JacksonConverterFactory jacksonConverterFactory(){
