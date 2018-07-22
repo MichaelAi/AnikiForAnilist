@@ -8,9 +8,6 @@ import com.apollographql.apollo.cache.normalized.CacheKeyResolver;
 import com.apollographql.apollo.cache.normalized.NormalizedCacheFactory;
 import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy;
 import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory;
-import com.apollographql.apollo.subscription.WebSocketSubscriptionTransport;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,12 +19,6 @@ import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.TlsVersion;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
-
-import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY;
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SNAKE_CASE;
 
 /**
  * Created by Mike Ai on 21-Jul-18.
@@ -133,15 +124,5 @@ public class ApolloApiBuilder {
 
     private NormalizedCacheFactory normalizedCacheFactory() {
         return new LruNormalizedCacheFactory(EvictionPolicy.NO_EVICTION);
-    }
-
-    private JacksonConverterFactory jacksonConverterFactory(){
-        //Configure Jackson
-        ObjectMapper objectMapper = new ObjectMapper()
-                .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .configure(ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-                .configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
-                .setPropertyNamingStrategy(SNAKE_CASE);
-        return JacksonConverterFactory.create(objectMapper);
     }
 }

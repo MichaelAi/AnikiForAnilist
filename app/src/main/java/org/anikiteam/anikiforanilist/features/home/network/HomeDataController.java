@@ -1,9 +1,5 @@
 package org.anikiteam.anikiforanilist.features.home.network;
 
-import android.content.Context;
-
-import org.anikiteam.anikiforanilist.base.BaseNetworkController;
-import org.anikiteam.anikiforanilist.core.interfaces.NetworkResponseCallback;
 import org.anikiteam.anikiforanilist.features.home.interfaces.HomeDataProvider;
 
 /**
@@ -11,7 +7,7 @@ import org.anikiteam.anikiforanilist.features.home.interfaces.HomeDataProvider;
  */
 
 @SuppressWarnings("unchecked")
-public class HomeDataController extends BaseNetworkController implements HomeDataProvider {
+public class HomeDataController implements HomeDataProvider {
 
 
     @Override

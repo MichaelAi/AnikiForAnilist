@@ -26,7 +26,6 @@ android {
 ext {
     support = '27.1.1'
     dagger = '2.13'
-    retrofit = '2.4.0'
     okhttp = '3.11.0'
     jackson = '2.9.6'
 }
@@ -43,12 +42,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "com.google.dagger:dagger:$dagger"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.okhttp3:okhttp:$okhttp"
-    implementation 'com.squareup.retrofit2:converter-jackson:2.4.0'
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson"
-    implementation "com.fasterxml.jackson.core:jackson-core:$jackson"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson"
     implementation 'com.apollographql.apollo:apollo-runtime:1.0.0-alpha'
     compileOnly 'org.projectlombok:lombok:1.18.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.0'
