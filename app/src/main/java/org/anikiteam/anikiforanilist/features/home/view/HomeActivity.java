@@ -1,32 +1,20 @@
 package org.anikiteam.anikiforanilist.features.home.view;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.exception.ApolloException;
-
-import org.anikiteam.aniki.SearchMediaQuery;
-import org.anikiteam.anikiforanilist.AnikiApp;
 import org.anikiteam.anikiforanilist.R;
-import org.anikiteam.anikiforanilist.features.home.network.HomeDataController;
-import org.anikiteam.anikiforanilist.services.GraphQlService;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.inject.Inject;
+import org.anikiteam.anikiforanilist.features.home.HomeViewModel;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @Inject GraphQlService graphQlService;
+    private HomeViewModel homeViewModel;
+
 
     private TextView mTextMessage;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -55,8 +43,10 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnikiApp.getAppComponent().inject(this);
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         setContentView(R.layout.activity_home);
+
+        homeViewModel.getTestTitle().observe(this, newName -> mTextMessage.setText(newName));
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -65,26 +55,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     void testQuery() {
-        ApolloCall.Callback<SearchMediaQuery.Data> callback = new ApolloCall.Callback<SearchMediaQuery.Data>() {
-            @Override
-            public void onResponse(@NotNull Response<SearchMediaQuery.Data> response) {
-                Collection<SearchMediaQuery.Medium> result = response.data().Page().media();
-                for(SearchMediaQuery.Medium item : result){
-                    Log.d("Apollo",item.title().english()
-                            + " " +
-                            item.title().native_()
-                            + " "
-                            + item.status());
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull ApolloException e) {
-
-            }
-        };
-
-        graphQlService.searchByMediaByTypeAndString("cowboy",1,callback);
+      homeViewModel.testQuery2();
     }
 
 }

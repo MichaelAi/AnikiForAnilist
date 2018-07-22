@@ -16,6 +16,7 @@ public class AnikiApp extends Application {
 
     @Getter private static AppComponent appComponent;
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onCreate() {
         super.onCreate();

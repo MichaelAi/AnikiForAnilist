@@ -28,6 +28,7 @@ ext {
     dagger = '2.13'
     okhttp = '3.11.0'
     jackson = '2.9.6'
+    lifecycle = '1.1.1'
 }
 
 
@@ -46,4 +47,10 @@ dependencies {
     implementation 'com.apollographql.apollo:apollo-runtime:1.0.0-alpha'
     compileOnly 'org.projectlombok:lombok:1.18.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.0'
+
+    implementation "android.arch.lifecycle:extensions:$lifecycle"
+    implementation "android.arch.lifecycle:common-java8:$lifecycle"
+    testImplementation "android.arch.core:core-testing:$lifecycle"
+
+
 }
