@@ -9,19 +9,26 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 
-import org.anikiteam.aniki.AnimeQuery;
+import org.anikiteam.aniki.SearchMediaQuery;
+import org.anikiteam.anikiforanilist.AnikiApp;
 import org.anikiteam.anikiforanilist.R;
-import org.anikiteam.anikiforanilist.core.ApolloApiBuilder;
+import org.anikiteam.anikiforanilist.features.home.network.HomeDataController;
+import org.anikiteam.anikiforanilist.services.GraphQlService;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.inject.Inject;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
+    @Inject GraphQlService graphQlService;
 
+    private TextView mTextMessage;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -30,15 +37,15 @@ public class HomeActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     mTextMessage.setText(R.string.title_home);
-                    testQuery(1);
+                    testQuery();
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
-                    testQuery(2);
+                    testQuery();
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
-                    testQuery(3);
+                    testQuery();
                     return true;
             }
             return false;
@@ -48,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AnikiApp.getAppComponent().inject(this);
         setContentView(R.layout.activity_home);
 
         mTextMessage = (TextView) findViewById(R.id.message);
@@ -55,30 +63,28 @@ public class HomeActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private final String BASE_URL = "https://graphql.anilist.co";
 
-    void testQuery(int coolId) {
-        ApolloApiBuilder builder = new ApolloApiBuilder();
-        ApolloClient apolloClient = builder.setBaseUrl(BASE_URL)
-                .setLanguage("en-us")
-                .build();
-
-        AnimeQuery animeQuery = AnimeQuery.builder().id(coolId).build();
-        ApolloCall.Callback<AnimeQuery.Data> callback = new ApolloCall.Callback<AnimeQuery.Data>() {
+    void testQuery() {
+        ApolloCall.Callback<SearchMediaQuery.Data> callback = new ApolloCall.Callback<SearchMediaQuery.Data>() {
             @Override
-            public void onResponse(@NotNull Response<AnimeQuery.Data> response) {
-                Log.d("query",response.data().Media().title().english());
-                Log.d("query",response.data().Media().status().rawValue());
+            public void onResponse(@NotNull Response<SearchMediaQuery.Data> response) {
+                Collection<SearchMediaQuery.Medium> result = response.data().Page().media();
+                for(SearchMediaQuery.Medium item : result){
+                    Log.d("Apollo",item.title().english()
+                            + " " +
+                            item.title().native_()
+                            + " "
+                            + item.status());
+                }
             }
 
             @Override
             public void onFailure(@NotNull ApolloException e) {
-                Log.e("query",e.getMessage());
 
             }
         };
 
-        apolloClient.query(animeQuery).enqueue(callback);
+        graphQlService.searchByMediaByTypeAndString("cowboy",1,callback);
     }
 
 }

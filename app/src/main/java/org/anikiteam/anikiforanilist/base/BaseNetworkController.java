@@ -1,5 +1,8 @@
 package org.anikiteam.anikiforanilist.base;
 
+import com.apollographql.apollo.ApolloClient;
+
+import org.anikiteam.anikiforanilist.core.ApolloApiBuilder;
 import org.anikiteam.anikiforanilist.core.NetworkCall;
 import org.anikiteam.anikiforanilist.core.interfaces.NetworkRequestListener;
 import org.anikiteam.anikiforanilist.core.RetrofitApiBuilder;
@@ -19,6 +22,9 @@ public class BaseNetworkController<T> {
 
     private List<NetworkRequestListener> onRequestStart; //executed on call
     private List<NetworkRequestListener> onRequestEnd; //executed on response
+
+    protected ApolloClient apolloClient;
+
 
     public void addNetworkStartListenter(NetworkRequestListener listener){
         if(onRequestStart == null) onRequestStart = new ArrayList<>();
@@ -76,6 +82,13 @@ public class BaseNetworkController<T> {
                 .forceSSL(false)
                 .enableLogging(false)
                 .build(clazz);
+    }
+
+    protected void buildApolloClient() {
+        ApolloApiBuilder builder = new ApolloApiBuilder();
+        apolloClient = builder.setBaseUrl(BASE_URL)
+                .setLanguage("en-us")
+                .build();
     }
 
 }

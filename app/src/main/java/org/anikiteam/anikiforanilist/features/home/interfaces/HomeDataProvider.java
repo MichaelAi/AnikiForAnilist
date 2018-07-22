@@ -10,5 +10,5 @@ import org.anikiteam.anikiforanilist.core.interfaces.NetworkResponseCallback;
 
 public interface HomeDataProvider {
 
-    void getMediaByTypeAndId(Context context, String type, String id, NetworkResponseCallback networkResponseCallback);
+    void cancel();
 }
