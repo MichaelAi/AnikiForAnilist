@@ -29,12 +29,14 @@ ext {
     okhttp = '3.11.0'
     jackson = '2.9.6'
     lifecycle = '1.1.1'
+    butterknife ='8.8.1'
 }
 
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$support"
+    implementation "com.android.support:cardview-v7:$support"
     implementation "com.android.support:support-v4:$support"
     implementation "com.android.support:design:$support"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -52,5 +54,6 @@ dependencies {
     implementation "android.arch.lifecycle:common-java8:$lifecycle"
     testImplementation "android.arch.core:core-testing:$lifecycle"
 
-
+    implementation "com.jakewharton:butterknife:$butterknife"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 }

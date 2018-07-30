@@ -4,7 +4,9 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 
 import org.anikiteam.aniki.GetMediaQuery;
+import org.anikiteam.aniki.SearchMediaByTypeAndStatusQuery;
 import org.anikiteam.aniki.SearchMediaQuery;
+import org.anikiteam.aniki.type.MediaStatus;
 import org.anikiteam.aniki.type.MediaType;
 import org.anikiteam.anikiforanilist.core.ApolloApiBuilder;
 
@@ -43,4 +45,13 @@ public class GraphQlService {
         apolloClient.query(query).enqueue(callback);
     }
 
+    public void searchByMediaByTypeAndStatus(MediaType type, MediaStatus status, int page, ApolloCall.Callback<SearchMediaByTypeAndStatusQuery.Data> callback){
+        SearchMediaByTypeAndStatusQuery query = SearchMediaByTypeAndStatusQuery.builder()
+                .type(type)
+                .status(status)
+                .page(page)
+                .perPage(10)
+                .build();
+        apolloClient.query(query).enqueue(callback);
+    }
 }
