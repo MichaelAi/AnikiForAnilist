@@ -1,6 +1,5 @@
 package org.anikiteam.anikiforanilist.features.home.view;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +19,6 @@ import org.anikiteam.anikiforanilist.features.home.model.HomeListItem;
 import org.anikiteam.anikiforanilist.util.Valid;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 // test
 public class AdvancedItemAdapter extends AbstractExpandableItemAdapter<AdvancedItemAdapter.MediaGroupViewHolder, AdvancedItemAdapter.MediaItemViewHolder>

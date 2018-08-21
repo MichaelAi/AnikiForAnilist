@@ -8,6 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.util.AttributeSet;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -71,20 +74,31 @@ public class HomeActivity extends BaseActivity {
     private void updateRecyclerView(ArrayList<HomeListGroup> newValue) {
         if (recyclerView.getAdapter() == null) {
             RecyclerViewExpandableItemManager expMgr = new RecyclerViewExpandableItemManager(null);
-
             RecyclerView.Adapter adapter = new AdvancedItemAdapter(expMgr,newValue);
             adapter = expMgr.createWrappedAdapter(adapter);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
             expMgr.attachRecyclerView(recyclerView);
-//            HomeListItemAdapter adapter = new HomeListItemAdapter(this, newValue, null);
-//            LinearLayoutManager manager = new LinearLayoutManager(this);
-//            recyclerView.setLayoutManager(manager);
-//            recyclerView.setAdapter(adapter);
         } else {
             recyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.reload:
+                getTestAnime();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

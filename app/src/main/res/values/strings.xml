@@ -8,4 +8,5 @@
     <string name="home_header_popular">Popular This Season</string>
     <string name="home_header_upcoming">Upcoming Shows</string>
 
+    <string name="menu_reload"><Reload></Reload></string>
 </resources>
