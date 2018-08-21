@@ -6,6 +6,6 @@ import dagger.Component;
  * Created by Mike Ai on 22-Jul-18.
  */
 
-@Component(modules = { GraphQlModule.class, AppModule.class })
-public interface GraphQlComponent {
+@Component(modules = { MediaModule.class, AppModule.class })
+public interface MediaComponent {
 }
