@@ -1,6 +1,6 @@
 package org.anikiteam.anikiforanilist.di;
 
-import org.anikiteam.anikiforanilist.services.GraphQlService;
+import org.anikiteam.anikiforanilist.services.MediaService;
 
 import javax.inject.Singleton;
 
@@ -13,12 +13,12 @@ import dagger.Provides;
 
 @Module
 @Singleton
-public class GraphQlModule {
+public class MediaModule {
 
     @Provides
     @Singleton
-    public GraphQlService providesGraphQlService(){
-        return new GraphQlService();
+    public MediaService providesMediaService(){
+        return new MediaService();
     }
 
 }

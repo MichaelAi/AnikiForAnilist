@@ -3,12 +3,11 @@ package org.anikiteam.anikiforanilist.features.home.network;
 import com.apollographql.apollo.ApolloCall;
 
 import org.anikiteam.aniki.SearchMediaByTypeAndStatusQuery;
-import org.anikiteam.aniki.SearchMediaQuery;
 import org.anikiteam.aniki.type.MediaStatus;
 import org.anikiteam.aniki.type.MediaType;
 import org.anikiteam.anikiforanilist.AnikiApp;
 import org.anikiteam.anikiforanilist.features.home.interfaces.HomeDataProvider;
-import org.anikiteam.anikiforanilist.services.GraphQlService;
+import org.anikiteam.anikiforanilist.services.MediaService;
 
 import javax.inject.Inject;
 
@@ -19,7 +18,8 @@ import javax.inject.Inject;
 @SuppressWarnings("unchecked")
 public class HomeDataController implements HomeDataProvider {
 
-    @Inject GraphQlService graphQlService;
+    @Inject
+    MediaService graphQlService;
 
     public HomeDataController(){
         AnikiApp.getAppComponent().inject(this);

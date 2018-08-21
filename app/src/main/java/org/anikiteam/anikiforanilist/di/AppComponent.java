@@ -13,12 +13,8 @@ import dagger.Component;
  */
 
 @Component(modules = {AppModule.class,
-        GraphQlModule.class})
+        MediaModule.class})
 @Singleton
 public interface AppComponent {
-    void inject(HomeActivity homeActivity);
-
-    void inject(HomeViewModel homeViewModel);
-
     void inject(HomeDataController homeDataController);
 }

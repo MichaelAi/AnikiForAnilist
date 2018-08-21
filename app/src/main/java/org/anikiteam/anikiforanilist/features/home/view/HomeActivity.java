@@ -6,15 +6,19 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+
+import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 
 import org.anikiteam.aniki.SearchMediaByTypeAndStatusQuery;
 import org.anikiteam.aniki.SearchMediaQuery;
 import org.anikiteam.anikiforanilist.R;
 import org.anikiteam.anikiforanilist.base.BaseActivity;
 import org.anikiteam.anikiforanilist.features.home.HomeViewModel;
+import org.anikiteam.anikiforanilist.features.home.model.HomeListGroup;
 
 import java.util.ArrayList;
 
@@ -64,12 +68,20 @@ public class HomeActivity extends BaseActivity {
         viewModel.getNowAiringAnimeList().observe(this, this::updateRecyclerView);
     }
 
-    private void updateRecyclerView(ArrayList<SearchMediaByTypeAndStatusQuery.Medium> newValue) {
+    private void updateRecyclerView(ArrayList<HomeListGroup> newValue) {
         if (recyclerView.getAdapter() == null) {
-            HomeListItemAdapter adapter = new HomeListItemAdapter(this, newValue, null);
-            LinearLayoutManager manager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(manager);
+            RecyclerViewExpandableItemManager expMgr = new RecyclerViewExpandableItemManager(null);
+
+            RecyclerView.Adapter adapter = new AdvancedItemAdapter(expMgr,newValue);
+            adapter = expMgr.createWrappedAdapter(adapter);
             recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+            expMgr.attachRecyclerView(recyclerView);
+//            HomeListItemAdapter adapter = new HomeListItemAdapter(this, newValue, null);
+//            LinearLayoutManager manager = new LinearLayoutManager(this);
+//            recyclerView.setLayoutManager(manager);
+//            recyclerView.setAdapter(adapter);
         } else {
             recyclerView.getAdapter().notifyDataSetChanged();
         }

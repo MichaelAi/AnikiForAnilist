@@ -14,12 +14,12 @@ import org.anikiteam.anikiforanilist.core.ApolloApiBuilder;
  * Created by Mike Ai on 22-Jul-18.
  */
 
-public class GraphQlService {
+public class MediaService {
 
     ApolloClient apolloClient;
     private final String BASE_URL = "https://graphql.anilist.co"; //todo: move this
 
-    public GraphQlService(){
+    public MediaService(){
         ApolloApiBuilder builder = new ApolloApiBuilder();
         apolloClient = builder.setLanguage("en-US")
                 .forceSSL(true)
